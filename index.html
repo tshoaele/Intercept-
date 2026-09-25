@@ -10,310 +10,167 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet" />
 <style>
-  /* ============ THEME TOKENS ============ */
   :root {
-    --bg: #0a0a0f;
-    --bg-2: #12121c;
-    --surface: #1a1a28;
-    --surface-2: #22223a;
-    --text: #eaeaf5;
-    --text-dim: #8a8aa8;
-    --accent: #00e5ff;
-    --accent-2: #b14aff;
-    --glow: 0 0 24px rgba(0, 229, 255, 0.35);
-    --border: rgba(0, 229, 255, 0.15);
-    --radius: 18px;
-    --font-display: 'Orbitron', 'Rajdhani', system-ui, sans-serif;
-    --font-body: 'Rajdhani', 'Orbitron', system-ui, sans-serif;
-    color-scheme: dark;
+    --bg:#0a0a0f; --bg-2:#12121c; --surface:#1a1a28; --surface-2:#22223a;
+    --text:#eaeaf5; --text-dim:#8a8aa8;
+    --accent:#00e5ff; --accent-2:#b14aff;
+    --red:#ff3b6b; --blue:#3b8bff; --purple:#b14aff; --gold:#ffc542;
+    --glow:0 0 24px rgba(0,229,255,.35);
+    --border:rgba(0,229,255,.15);
+    --radius:18px;
+    --font-display:'Orbitron','Rajdhani',system-ui,sans-serif;
+    --font-body:'Rajdhani','Orbitron',system-ui,sans-serif;
+    color-scheme:dark;
   }
-
-  [data-theme="light"] {
-    --bg: #f4f6fb;
-    --bg-2: #e8ecf6;
-    --surface: #ffffff;
-    --surface-2: #eef1fa;
-    --text: #0d0d1a;
-    --text-dim: #5a5a78;
-    --accent: #0077cc;
-    --accent-2: #7a2ecc;
-    --glow: 0 0 20px rgba(0, 119, 204, 0.25);
-    --border: rgba(0, 119, 204, 0.2);
-    color-scheme: light;
+  [data-theme="light"]{
+    --bg:#f4f6fb; --bg-2:#e8ecf6; --surface:#fff; --surface-2:#eef1fa;
+    --text:#0d0d1a; --text-dim:#5a5a78;
+    --accent:#0077cc; --accent-2:#7a2ecc;
+    --glow:0 0 20px rgba(0,119,204,.25);
+    --border:rgba(0,119,204,.2);
+    color-scheme:light;
   }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);overscroll-behavior:none;transition:background .4s,color .4s}
+  body{display:flex;flex-direction:column;min-height:100dvh;
+    background:radial-gradient(circle at 20% 0%,rgba(177,74,255,.12),transparent 55%),
+               radial-gradient(circle at 85% 100%,rgba(0,229,255,.10),transparent 55%),var(--bg)}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  header{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;padding-top:calc(20px + env(safe-area-inset-top))}
+  .brand{font-family:var(--font-display);font-weight:800;font-size:1.15rem;letter-spacing:.14em;text-transform:uppercase}
+  .brand span{color:var(--accent);text-shadow:var(--glow)}
+  .header-actions{display:flex;gap:8px}
+  .icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:1rem;cursor:pointer;display:grid;place-items:center;transition:all .25s}
+  .icon-btn:active{transform:scale(.92)}
+  .icon-btn.active{border-color:var(--accent);box-shadow:var(--glow);color:var(--accent)}
 
-  html, body {
-    height: 100%;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    overscroll-behavior: none;
-    transition: background 0.4s ease, color 0.4s ease;
-  }
+  main{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:16px 22px 40px;text-align:center}
+  .screen{display:none;width:100%;max-width:500px;animation:fade .4s ease}
+  .screen.active{display:flex;flex-direction:column;align-items:center}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-  body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100dvh;
-    background:
-      radial-gradient(circle at 20% 0%, rgba(177, 74, 255, 0.12), transparent 55%),
-      radial-gradient(circle at 85% 100%, rgba(0, 229, 255, 0.10), transparent 55%),
-      var(--bg);
-  }
+  .tagline{font-size:.8rem;letter-spacing:.28em;text-transform:uppercase;color:var(--text-dim);margin-bottom:30px}
 
-  /* ============ HEADER ============ */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 22px;
-    padding-top: calc(20px + env(safe-area-inset-top));
-  }
+  .urge-btn{position:relative;width:200px;height:200px;border-radius:50%;border:none;
+    background:radial-gradient(circle at 35% 30%,var(--accent),var(--accent-2));color:#fff;
+    font-family:var(--font-display);font-weight:800;font-size:1rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+    box-shadow:0 0 50px rgba(0,229,255,.35),0 0 90px rgba(177,74,255,.25);
+    transition:transform .25s,box-shadow .3s;animation:pulse 3.5s ease-in-out infinite;margin-bottom:10px}
+  .urge-btn:active{transform:scale(.94)}
+  @keyframes pulse{0%,100%{box-shadow:0 0 50px rgba(0,229,255,.35),0 0 90px rgba(177,74,255,.25)}50%{box-shadow:0 0 70px rgba(0,229,255,.55),0 0 120px rgba(177,74,255,.4)}}
+  .urge-btn::after{content:"";position:absolute;inset:-14px;border-radius:50%;border:1px solid var(--border);animation:ring 3.5s ease-in-out infinite}
+  @keyframes ring{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.08);opacity:.15}}
 
-  .brand {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 1.25rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text);
-  }
-  .brand span { color: var(--accent); text-shadow: var(--glow); }
+  .hint{margin-top:26px;font-size:.92rem;color:var(--text-dim);max-width:300px;line-height:1.5}
 
-  .header-actions { display: flex; gap: 10px; }
+  /* Home: quick stats strip */
+  .stats-strip{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:34px}
+  .stat{padding:14px;border-radius:14px;background:var(--surface);border:1px solid var(--border);text-align:left}
+  .stat .k{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;font-family:var(--font-display)}
+  .stat .v{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--accent)}
 
-  .icon-btn {
-    width: 42px; height: 42px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    font-size: 1.1rem;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    transition: all 0.25s ease;
-  }
-  .icon-btn:active { transform: scale(0.92); }
-  .icon-btn.active { border-color: var(--accent); box-shadow: var(--glow); color: var(--accent); }
+  /* Navigation row */
+  .nav-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;margin-top:14px}
+  .nav-btn{padding:12px 6px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;
+    font-family:var(--font-display);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;transition:all .25s}
+  .nav-btn:active{transform:scale(.95);border-color:var(--accent)}
+  .nav-btn .ico{display:block;font-size:1.1rem;margin-bottom:6px}
 
-  /* ============ MAIN ============ */
-  main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 24px 40px;
-    text-align: center;
-    position: relative;
-  }
+  .step-label{font-family:var(--font-display);font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+  .step-title{font-family:var(--font-display);font-size:1.5rem;font-weight:700;line-height:1.25;margin-bottom:14px}
+  .step-body{font-size:1rem;color:var(--text-dim);line-height:1.6;margin-bottom:28px}
 
-  .screen { display: none; width: 100%; max-width: 480px; animation: fade 0.4s ease; }
-  .screen.active { display: flex; flex-direction: column; align-items: center; }
+  .breath-circle{width:150px;height:150px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;
+    margin:0 auto 26px;font-family:var(--font-display);font-size:1rem;color:var(--accent);box-shadow:var(--glow)}
+  .breath-circle.inhale{animation:expand 4s ease-in-out forwards}
+  .breath-circle.hold{transform:scale(1.35)}
+  .breath-circle.exhale{animation:contract 4s ease-in-out forwards}
+  @keyframes expand{from{transform:scale(1)}to{transform:scale(1.35)}}
+  @keyframes contract{from{transform:scale(1.35)}to{transform:scale(1)}}
 
-  @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .btn{display:block;width:100%;padding:16px;border-radius:var(--radius);border:1px solid var(--border);
+    background:var(--surface);color:var(--text);font-family:var(--font-display);font-size:.8rem;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;cursor:pointer;margin-bottom:10px;transition:all .25s}
+  .btn:active{transform:scale(.97)}
+  .btn.primary{background:linear-gradient(120deg,var(--accent),var(--accent-2));color:#fff;border:none;box-shadow:0 0 30px rgba(0,229,255,.3)}
+  .btn.red{background:linear-gradient(120deg,var(--red),var(--accent-2));color:#fff;border:none}
+  .btn.blue{background:linear-gradient(120deg,var(--blue),var(--accent));color:#fff;border:none}
+  .btn.gold{background:linear-gradient(120deg,var(--gold),var(--red));color:#1a1a28;border:none;font-weight:800}
+  .btn.ghost{background:transparent;color:var(--text-dim);border-color:transparent}
+  .btn.small{padding:12px;font-size:.7rem}
 
-  /* --- HOME --- */
-  .tagline {
-    font-size: 0.85rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 40px;
-  }
+  .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-bottom:10px}
+  .choice{padding:20px 10px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);color:var(--text);
+    font-family:var(--font-body);cursor:pointer;text-align:center;transition:all .25s}
+  .choice:active{transform:scale(.96);border-color:var(--accent)}
+  .choice .emoji{display:block;font-size:1.6rem;margin-bottom:6px}
+  .choice .label{font-family:var(--font-display);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
 
-  .urge-btn {
-    position: relative;
-    width: 210px; height: 210px;
-    border-radius: 50%;
-    border: none;
-    background: radial-gradient(circle at 35% 30%, var(--accent), var(--accent-2));
-    color: #fff;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 1.05rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: 0 0 50px rgba(0, 229, 255, 0.35), 0 0 90px rgba(177, 74, 255, 0.25);
-    transition: transform 0.25s ease, box-shadow 0.3s ease;
-    animation: pulse 3.5s ease-in-out infinite;
-  }
-  .urge-btn:active { transform: scale(0.94); }
+  /* Grade card */
+  .grade-card{width:100%;padding:24px;border-radius:20px;margin-bottom:16px;
+    background:linear-gradient(140deg,var(--surface),var(--surface-2));border:1px solid var(--border);text-align:center;position:relative;overflow:hidden}
+  .grade-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(177,74,255,.18),transparent 70%);pointer-events:none}
+  .grade-rank{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--gold);text-shadow:0 0 30px rgba(255,197,66,.5);margin-bottom:4px}
+  .grade-name{font-family:var(--font-display);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px}
+  .grade-bar{height:8px;width:100%;background:var(--surface-2);border-radius:8px;overflow:hidden;margin-bottom:12px}
+  .grade-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--gold));transition:width .8s ease}
+  .grade-meta{font-size:.85rem;color:var(--text-dim)}
 
-  @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 50px rgba(0,229,255,0.35), 0 0 90px rgba(177,74,255,0.25); }
-    50% { box-shadow: 0 0 70px rgba(0,229,255,0.55), 0 0 120px rgba(177,74,255,0.4); }
-  }
+  /* Timer card */
+  .timer-card{width:100%;padding:22px;border-radius:20px;background:var(--surface);border:1px solid var(--border);margin-bottom:16px;text-align:center}
+  .timer-label{font-family:var(--font-display);font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;color:var(--text-dim);margin-bottom:12px}
+  .timer-value{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--accent);letter-spacing:.05em;margin-bottom:6px;font-variant-numeric:tabular-nums}
+  .timer-sub{font-size:.85rem;color:var(--text-dim)}
 
-  .urge-btn::after {
-    content: "";
-    position: absolute; inset: -14px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    animation: ring 3.5s ease-in-out infinite;
-  }
-  @keyframes ring {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.08); opacity: 0.15; }
-  }
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-bottom:16px}
+  .stat-box{padding:16px;border-radius:14px;background:var(--surface);border:1px solid var(--border);text-align:left}
+  .stat-box .k{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;font-family:var(--font-display)}
+  .stat-box .v{font-family:var(--font-display);font-size:1.35rem;font-weight:700;color:var(--accent)}
 
-  .hint {
-    margin-top: 36px;
-    font-size: 0.95rem;
-    color: var(--text-dim);
-    max-width: 280px;
-    line-height: 1.5;
-  }
+  .section-title{font-family:var(--font-display);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--text-dim);margin:22px 0 12px;text-align:left;width:100%}
 
-  /* --- REDIRECT --- */
-  .step-label {
-    font-family: var(--font-display);
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 20px;
-  }
+  .log-list{width:100%;text-align:left;margin-bottom:14px;max-height:44vh;overflow-y:auto}
+  .log-item{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:12px;
+    background:var(--surface);border:1px solid var(--border);margin-bottom:8px;font-size:.88rem}
+  .log-item .when{color:var(--text-dim);font-size:.78rem}
+  .log-item .what{font-family:var(--font-display);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+  .log-item .what.red{color:var(--red)}
+  .log-item .what.blue{color:var(--blue)}
+  .log-item .what.gold{color:var(--gold)}
+  .empty{color:var(--text-dim);font-size:.92rem;padding:26px 0;text-align:center;width:100%}
 
-  .step-title {
-    font-family: var(--font-display);
-    font-size: 1.6rem;
-    font-weight: 700;
-    line-height: 1.25;
-    margin-bottom: 16px;
-  }
+  .toggle-row{display:flex;justify-content:space-between;align-items:center;width:100%;padding:14px 16px;border-radius:12px;
+    background:var(--surface);border:1px solid var(--border);margin-bottom:12px}
+  .toggle-row span{font-size:.92rem}
+  .switch{position:relative;width:48px;height:28px}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{position:absolute;inset:0;background:var(--surface-2);border:1px solid var(--border);border-radius:28px;cursor:pointer;transition:.3s}
+  .slider::before{content:"";position:absolute;height:20px;width:20px;left:3px;top:3px;background:var(--text-dim);border-radius:50%;transition:.3s}
+  .switch input:checked + .slider{background:var(--accent);border-color:var(--accent)}
+  .switch input:checked + .slider::before{transform:translateX(20px);background:#fff}
 
-  .step-body {
-    font-size: 1.05rem;
-    color: var(--text-dim);
-    line-height: 1.6;
-    margin-bottom: 34px;
-  }
+  /* Kegel guided exercise */
+  .kegel-timer{font-family:var(--font-display);font-size:3rem;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;margin:20px 0}
+  .kegel-phase{font-family:var(--font-display);font-size:.85rem;letter-spacing:.28em;text-transform:uppercase;color:var(--accent-2);margin-bottom:12px}
+  .kegel-cue{font-size:1rem;color:var(--text-dim);line-height:1.5;margin-bottom:16px;max-width:340px}
+  .rep-dots{display:flex;gap:6px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--surface-2);border:1px solid var(--border)}
+  .dot.done{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .dot.current{background:var(--accent-2);box-shadow:0 0 10px var(--accent-2)}
 
-  .breath-circle {
-    width: 160px; height: 160px;
-    border-radius: 50%;
-    border: 2px solid var(--accent);
-    display: grid;
-    place-items: center;
-    margin: 0 auto 30px;
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    color: var(--accent);
-    box-shadow: var(--glow);
-  }
-  .breath-circle.inhale { animation: expand 4s ease-in-out forwards; }
-  .breath-circle.hold   { transform: scale(1.35); }
-  .breath-circle.exhale { animation: contract 4s ease-in-out forwards; }
+  .routine-list{width:100%;margin-bottom:14px}
+  .routine{padding:16px;border-radius:14px;background:var(--surface);border:1px solid var(--border);margin-bottom:10px;text-align:left;cursor:pointer;transition:all .25s}
+  .routine:active{transform:scale(.98);border-color:var(--accent)}
+  .routine .rname{font-family:var(--font-display);font-size:.85rem;font-weight:700;margin-bottom:4px}
+  .routine .rdesc{font-size:.82rem;color:var(--text-dim)}
 
-  @keyframes expand   { from { transform: scale(1); }    to { transform: scale(1.35); } }
-  @keyframes contract { from { transform: scale(1.35); } to { transform: scale(1); } }
+  /* Date input */
+  .datetime-row{display:flex;gap:8px;width:100%;margin-bottom:12px}
+  .datetime-row input{flex:1;padding:14px;border-radius:12px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-body);font-size:.92rem}
+  .datetime-row input:focus{outline:none;border-color:var(--accent)}
 
-  .btn {
-    display: block;
-    width: 100%;
-    padding: 17px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    font-family: var(--font-display);
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    cursor: pointer;
-    margin-bottom: 12px;
-    transition: all 0.25s ease;
-  }
-  .btn:active { transform: scale(0.97); }
-  .btn.primary {
-    background: linear-gradient(120deg, var(--accent), var(--accent-2));
-    color: #fff;
-    border: none;
-    box-shadow: 0 0 30px rgba(0,229,255,0.3);
-  }
-  .btn.ghost { background: transparent; color: var(--text-dim); border-color: transparent; }
-
-  /* --- CHOICE GRID --- */
-  .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 8px; }
-  .choice {
-    padding: 22px 12px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    font-family: var(--font-body);
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.25s ease;
-  }
-  .choice:active { transform: scale(0.96); border-color: var(--accent); }
-  .choice .emoji { display: block; font-size: 1.7rem; margin-bottom: 8px; }
-  .choice .label {
-    font-family: var(--font-display);
-    font-size: 0.65rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-  }
-
-  /* --- LOG --- */
-  .log-list { width: 100%; text-align: left; margin-bottom: 20px; max-height: 50vh; overflow-y: auto; }
-  .log-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 14px 16px;
-    border-radius: 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-  }
-  .log-item .when { color: var(--text-dim); font-size: 0.8rem; }
-  .log-item .what { font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
-  .empty { color: var(--text-dim); font-size: 0.95rem; padding: 30px 0; }
-
-  .toggle-row {
-    display: flex; justify-content: space-between; align-items: center;
-    width: 100%; padding: 16px; border-radius: 12px;
-    background: var(--surface); border: 1px solid var(--border);
-    margin-bottom: 16px;
-  }
-  .toggle-row span { font-size: 0.95rem; }
-
-  .switch { position: relative; width: 48px; height: 28px; }
-  .switch input { opacity: 0; width: 0; height: 0; }
-  .slider {
-    position: absolute; inset: 0;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 28px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  .slider::before {
-    content: ""; position: absolute;
-    height: 20px; width: 20px; left: 3px; top: 3px;
-    background: var(--text-dim);
-    border-radius: 50%;
-    transition: 0.3s;
-  }
-  .switch input:checked + .slider { background: var(--accent); border-color: var(--accent); }
-  .switch input:checked + .slider::before { transform: translateX(20px); background: #fff; }
-
-  footer {
-    text-align: center;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    padding: 16px 0 calc(16px + env(safe-area-inset-bottom));
-    opacity: 0.6;
-  }
+  footer{text-align:center;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);
+    padding:14px 0 calc(14px + env(safe-area-inset-bottom));opacity:.6}
 </style>
 </head>
 <body>
@@ -321,22 +178,483 @@
 <header>
   <div class="brand">RE<span>WIRE</span></div>
   <div class="header-actions">
-    <button class="icon-btn" id="themeBtn" aria-label="Toggle theme">☾</button>
-    <button class="icon-btn" id="logBtn" aria-label="Open log">☰</button>
+    <button class="icon-btn" id="themeBtn" aria-label="Theme">☾</button>
+    <button class="icon-btn" id="homeBtn" aria-label="Home">◈</button>
   </div>
 </header>
 
 <main>
 
-  <!-- HOME -->
+  <!-- ============ HOME ============ -->
   <section class="screen active" id="screen-home">
     <p class="tagline">Urge Interrupt</p>
     <button class="urge-btn" id="urgeBtn">I Feel<br>An Urge</button>
     <p class="hint">Tap when it starts. You have a few minutes. Let's use them.</p>
+
+    <div class="stats-strip">
+      <div class="stat"><div class="k">Grade</div><div class="v" id="homeGrade">G4</div></div>
+      <div class="stat"><div class="k">Retention</div><div class="v" id="homeRetention">—</div></div>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-btn" id="navGrade"><span class="ico">✦</span>Grade</button>
+      <button class="nav-btn" id="navEnergy"><span class="ico">◉</span>Energy</button>
+      <button class="nav-btn" id="navTrain"><span class="ico">⛨</span>Train</button>
+      <button class="nav-btn" id="navLog"><span class="ico">☰</span>Log</button>
+    </div>
   </section>
 
-  <!-- CHOICE -->
+  <!-- ============ CHOICE ============ -->
   <section class="screen" id="screen-choice">
+    <p class="step-label">Step 1 / Redirect</p>
+    <h2 class="step-title">Choose your path</h2>
+    <p class="step-body">Pick what fits right now.</p>
+    <div class="choice-grid">
+      <button class="choice" data-path="physical"><span class="emoji">⚡</span><span class="label">Physical</span></button>
+      <button class="choice" data-path="mental"><span class="emoji">🧠</span><span class="label">Mental</span></button>
+      <button class="choice" data-path="spiritual"><span class="emoji">✦</span><span class="label">Spiritual</span></button>
+      <button class="choice" data-path="breathe"><span class="emoji">◯</span><span class="label">Breathe</span></button>
+    </div>
+    <button class="btn ghost" data-home>Back</button>
+  </section>
+
+  <!-- ============ ACTION ============ -->
+  <section class="screen" id="screen-action">
+    <p class="step-label" id="actionLabel">Redirect</p>
+    <h2 class="step-title" id="actionTitle"></h2>
+    <p class="step-body" id="actionBody"></p>
+    <div id="breathWrap" style="display:none">
+      <div class="breath-circle" id="breathCircle">Tap to start</div>
+    </div>
+    <button class="btn primary" id="doneBtn">I Made It Through</button>
+    <button class="btn ghost" id="againBtn">Show Another</button>
+  </section>
+
+  <!-- ============ GRADE ============ -->
+  <section class="screen" id="screen-grade">
+    <p class="step-label">Sorcerer Grade</p>
+    <h2 class="step-title">Your Progression</h2>
+    <div class="grade-card">
+      <div class="grade-rank" id="gradeRank">Grade 4</div>
+      <div class="grade-name" id="gradeName">The Urge Controls You</div>
+      <div class="grade-bar"><div class="grade-fill" id="gradeFill" style="width:0%"></div></div>
+      <div class="grade-meta" id="gradeMeta">Log urges to begin tracking.</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="k">Completed</div><div class="v" id="statDone">0</div></div>
+      <div class="stat-box"><div class="k">Completion %</div><div class="v" id="statRate">0%</div></div>
+    </div>
+    <p class="step-body" style="font-size:.85rem;margin-top:8px">Grade rises with consistent redirects over the last 30 days. Falls with relapses. The curse strengthens when ignored — and weakens when fought.</p>
+    <button class="btn ghost" data-home>Back</button>
+  </section>
+
+  <!-- ============ ENERGY (Retention + Release) ============ -->
+  <section class="screen" id="screen-energy">
+    <p class="step-label">Cursed Energy</p>
+    <h2 class="step-title">Retention & Release</h2>
+
+    <div class="timer-card">
+      <div class="timer-label">Current Retention</div>
+      <div class="timer-value" id="retTimer">00d 00h 00m 00s</div>
+      <div class="timer-sub" id="retSince">No release logged yet</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-box"><div class="k">Best Streak</div><div class="v" id="bestStreak">—</div></div>
+      <div class="stat-box"><div class="k">Releases (30d)</div><div class="v" id="relCount">0</div></div>
+    </div>
+
+    <button class="btn blue" id="logPartnered">◈ Log Partnered Release</button>
+    <button class="btn red" id="logSolo">⚡ Log Solo Release</button>
+    <button class="btn ghost small" id="resetRet">Reset Retention Manually</button>
+    <button class="btn ghost" data-home>Back</button>
+  </section>
+
+  <!-- ============ TRAIN (Pelvic / Kegel) ============ -->
+  <section class="screen" id="screen-train">
+    <p class="step-label">Cursed Technique Training</p>
+    <h2 class="step-title">Pelvic Discipline</h2>
+    <p class="step-body" style="font-size:.9rem">Kegels and pelvic floor work improve erection quality, ejaculatory control, and circulation. They do not increase sperm count or volume — sperm production is hormonal, not muscular. Train for strength and control, not for output.</p>
+
+    <div class="routine-list">
+      <div class="routine" data-routine="beginner">
+        <div class="rname">Grade 4 · Foundation</div>
+        <div class="rdesc">5 reps · hold 3s · rest 3s · 2 rounds</div>
+      </div>
+      <div class="routine" data-routine="intermediate">
+        <div class="rname">Grade 2 · Endurance</div>
+        <div class="rdesc">10 reps · hold 5s · rest 5s · 2 rounds</div>
+      </div>
+      <div class="routine" data-routine="advanced">
+        <div class="rname">Special Grade · Control</div>
+        <div class="rdesc">15 reps · hold 5s · quick pulse x5 · 3 rounds</div>
+      </div>
+    </div>
+    <button class="btn ghost" data-home>Back</button>
+  </section>
+
+  <!-- ============ KEGEL RUN ============ -->
+  <section class="screen" id="screen-kegel">
+    <p class="step-label" id="kegelLabel">Training</p>
+    <div class="kegel-phase" id="kegelPhase">Get Ready</div>
+    <div class="kegel-timer" id="kegelTimer">3</div>
+    <p class="kegel-cue" id="kegelCue">Squeeze the muscles you'd use to stop urination mid-flow. Do not clench your abs, thighs, or glutes.</p>
+    <div class="rep-dots" id="kegelDots"></div>
+    <button class="btn primary" id="kegelStart">Start</button>
+    <button class="btn ghost" id="kegelStop">Stop</button>
+  </section>
+
+  <!-- ============ LOG ============ -->
+  <section class="screen" id="screen-log">
+    <p class="step-label">Private Log</p>
+    <h2 class="step-title">Your Record</h2>
+
+    <div class="toggle-row">
+      <span>Enable urge log</span>
+      <label class="switch"><input type="checkbox" id="logToggle" /><span class="slider"></span></label>
+    </div>
+
+    <div class="log-list" id="logList"><p class="empty">Log is off.</p></div>
+
+    <button class="btn ghost small" id="clearLog">Clear Urge Log</button>
+    <button class="btn ghost" data-home>Back</button>
+  </section>
+
+</main>
+
+<footer>Offline · Private · Yours</footer>
+
+<script>
+/* ================= STATE ================= */
+const S = {
+  theme: localStorage.getItem('rw-theme') || 'dark',
+  logEnabled: localStorage.getItem('rw-log-enabled') === 'true',
+  log: JSON.parse(localStorage.getItem('rw-log') || '[]'),
+  releases: JSON.parse(localStorage.getItem('rw-releases') || '[]'),
+  lastRelease: parseInt(localStorage.getItem('rw-last-release') || '0', 10),
+  bestStreak: parseInt(localStorage.getItem('rw-best-streak') || '0', 10),
+  kegelHistory: JSON.parse(localStorage.getItem('rw-kegel') || '[]'),
+};
+
+/* ================= THEME ================= */
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', S.theme);
+  document.querySelector('meta[name=theme-color]').setAttribute('content', S.theme==='dark'?'#0a0a0f':'#f4f6fb');
+  document.getElementById('themeBtn').textContent = S.theme==='dark' ? '☾' : '☀';
+}
+document.getElementById('themeBtn').onclick = () => {
+  S.theme = S.theme==='dark' ? 'light' : 'dark';
+  localStorage.setItem('rw-theme', S.theme);
+  applyTheme();
+};
+applyTheme();
+
+/* ================= NAV ================= */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if (id === 'screen-grade') renderGrade();
+  if (id === 'screen-energy') renderEnergy();
+  if (id === 'screen-log') renderLog();
+}
+document.querySelectorAll('[data-home]').forEach(b => b.onclick = () => show('screen-home'));
+document.getElementById('homeBtn').onclick = () => show('screen-home');
+
+document.getElementById('urgeBtn').onclick = () => { recordUrge('started'); show('screen-choice'); };
+document.getElementById('navGrade').onclick = () => show('screen-grade');
+document.getElementById('navEnergy').onclick = () => show('screen-energy');
+document.getElementById('navTrain').onclick = () => show('screen-train');
+document.getElementById('navLog').onclick = () => show('screen-log');
+
+/* ================= REDIRECTS ================= */
+const redirects = {
+  physical: [
+    { title:'Cold Water', body:'Run cold water over your wrists and splash your face. 30 seconds. The urge will drop.' },
+    { title:'Twenty Push-Ups', body:'Drop and do 20. Slow. Feel the burn. Your body redirects the energy, and your mind follows.' },
+    { title:'Step Outside', body:'Walk out your door. Even 2 minutes. Fresh air, changed scenery, broken loop.' },
+    { title:'Stand & Stretch', body:'Stand up. Reach for the ceiling. Hold 10 seconds. Roll your shoulders. Repeat 3 times.' },
+  ],
+  mental: [
+    { title:'Name It', body:'Say out loud: "This is an urge. It is not me. It will pass in 5 minutes." Naming it weakens it.' },
+    { title:'5-4-3-2-1 Ground', body:'Name 5 things you see, 4 you hear, 3 you feel, 2 you smell, 1 you taste. Brings you back to the room.' },
+    { title:'Future You', body:'Picture yourself 10 minutes from now — calm, in control, glad you stopped. Step toward him.' },
+    { title:'Read This Twice', body:'The urge is a wave. You do not have to ride it to shore. You can let it pass under you.' },
+  ],
+  spiritual: [
+    { title:'Gratitude', body:'Name 3 things you are grateful for right now. Small ones count. Speak them aloud.' },
+    { title:'Stillness', body:'Sit. Close your eyes. 60 seconds of silence. Let thoughts come and go without chasing them.' },
+    { title:'Reflection', body:'Ask yourself: "What do I actually need right now?" Often it is rest, comfort, or connection — not this.' },
+    { title:'Breathe & Release', body:'Inhale peace. Exhale tension. Repeat silently 10 times.' },
+  ],
+  breathe: [
+    { title:'Box Breathing', body:'Follow the circle. Inhale 4 — hold 4 — exhale 4 — hold 4.', breath:true },
+    { title:'4-7-8 Calm', body:'Inhale 4 — hold 7 — exhale 8. Slows the heart, quiets the urge.', breath:true },
+  ],
+};
+let currentPath = null, currentIndex = 0;
+
+document.querySelectorAll('.choice').forEach(b => b.onclick = () => {
+  currentPath = b.dataset.path; currentIndex = 0; renderAction();
+});
+function renderAction(){
+  const list = redirects[currentPath], item = list[currentIndex % list.length];
+  document.getElementById('actionLabel').textContent = currentPath[0].toUpperCase()+currentPath.slice(1);
+  document.getElementById('actionTitle').textContent = item.title;
+  document.getElementById('actionBody').textContent = item.body;
+  const wrap = document.getElementById('breathWrap'), c = document.getElementById('breathCircle');
+  if (item.breath){ wrap.style.display='block'; c.className='breath-circle'; c.textContent='Tap to start'; c.onclick = runBreath; }
+  else wrap.style.display='none';
+  show('screen-action');
+}
+function runBreath(){
+  const c = document.getElementById('breathCircle');
+  const phases = ['Inhale','Hold','Exhale','Hold']; let i = 0;
+  c.textContent = phases[0]; c.className = 'breath-circle inhale';
+  const tick = () => {
+    i++;
+    if (i >= 8){ c.textContent='Done'; c.className='breath-circle'; return; }
+    const p = phases[i % 4];
+    c.textContent = p;
+    c.className = 'breath-circle ' + (p==='Inhale'?'inhale':p==='Exhale'?'exhale':'hold');
+    setTimeout(tick, 4000);
+  };
+  setTimeout(tick, 4000);
+}
+document.getElementById('againBtn').onclick = () => { currentIndex++; renderAction(); };
+document.getElementById('doneBtn').onclick = () => { recordUrge('completed'); show('screen-home'); };
+
+/* ================= URGE LOG ================= */
+function recordUrge(type){
+  if (!S.logEnabled) return;
+  S.log.push({ t: Date.now(), type, path: currentPath });
+  if (S.log.length > 400) S.log = S.log.slice(-400);
+  localStorage.setItem('rw-log', JSON.stringify(S.log));
+  renderLog();
+  updateHomeStats();
+}
+function renderLog(){
+  const el = document.getElementById('logList');
+  if (!S.logEnabled){ el.innerHTML = '<p class="empty">Log is off.</p>'; return; }
+  if (!S.log.length){ el.innerHTML = '<p class="empty">No entries yet.</p>'; return; }
+  el.innerHTML = S.log.slice().reverse().map(e => {
+    const d = new Date(e.t);
+    const when = d.toLocaleDateString()+' · '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    const cls = e.type === 'completed' ? '' : 'red';
+    return `<div class="log-item"><span class="when">${when}</span><span class="what ${cls}">${e.type}</span></div>`;
+  }).join('');
+}
+document.getElementById('logToggle').onchange = e => {
+  S.logEnabled = e.target.checked;
+  localStorage.setItem('rw-log-enabled', S.logEnabled);
+  renderLog(); updateHomeStats();
+};
+document.getElementById('clearLog').onclick = () => {
+  if (confirm('Clear urge log?')){ S.log = []; localStorage.removeItem('rw-log'); renderLog(); updateHomeStats(); }
+};
+
+/* ================= GRADE ================= */
+const GRADES = [
+  { rank:'Grade 4', name:'The Urge Controls You', min:0 },
+  { rank:'Grade 3', name:'You Notice The Urge',   min:25 },
+  { rank:'Grade 2', name:'You Interrupt Sometimes', min:50 },
+  { rank:'Grade 1', name:'You Interrupt Most Times', min:75 },
+  { rank:'Special Grade', name:'The Urge Passes Through You', min:92 },
+];
+function gradeData(){
+  const cutoff = Date.now() - 30*24*3600*1000;
+  const recent = S.log.filter(e => e.t >= cutoff);
+  const started = recent.filter(e => e.type === 'started').length;
+  const completed = recent.filter(e => e.type === 'completed').length;
+  const rate = started === 0 ? 0 : Math.round((completed/started)*100);
+  let g = GRADES[0];
+  for (const gr of GRADES) if (rate >= gr.min) g = gr;
+  return { started, completed, rate, grade:g };
+}
+function renderGrade(){
+  const d = gradeData();
+  document.getElementById('gradeRank').textContent = d.grade.rank;
+  document.getElementById('gradeName').textContent = d.grade.name;
+  document.getElementById('gradeFill').style.width = Math.min(100, d.rate) + '%';
+  document.getElementById('statDone').textContent = d.completed;
+  document.getElementById('statRate').textContent = d.rate + '%';
+  document.getElementById('gradeMeta').textContent = d.started === 0
+    ? 'Log urges to begin tracking.'
+    : `${d.completed} of ${d.started} redirects completed in last 30 days.`;
+}
+
+/* ================= ENERGY (Retention) ================= */
+function fmtDur(ms){
+  if (ms < 0) ms = 0;
+  const s = Math.floor(ms/1000);
+  const d = Math.floor(s/86400);
+  const h = Math.floor((s%86400)/3600);
+  const m = Math.floor((s%3600)/60);
+  const ss = s%60;
+  return `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(ss).padStart(2,'0')}s`;
+}
+function renderEnergy(){
+  const el = document.getElementById('retTimer');
+  const since = document.getElementById('retSince');
+  const best = document.getElementById('bestStreak');
+  const rel = document.getElementById('relCount');
+
+  if (!S.lastRelease){
+    el.textContent = '00d 00h 00m 00s';
+    since.textContent = 'No release logged yet';
+  } else {
+    el.textContent = fmtDur(Date.now() - S.lastRelease);
+    since.textContent = 'Since ' + new Date(S.lastRelease).toLocaleString();
+  }
+  best.textContent = S.bestStreak ? fmtDur(S.bestStreak) : '—';
+
+  const cutoff = Date.now() - 30*24*3600*1000;
+  rel.textContent = S.releases.filter(r => r.t >= cutoff).length;
+}
+setInterval(() => {
+  if (document.getElementById('screen-energy').classList.contains('active')) renderEnergy();
+}, 1000);
+
+function logRelease(kind){
+  const now = Date.now();
+  // Compute streak for best tracking
+  if (S.lastRelease){
+    const streak = now - S.lastRelease;
+    if (streak > S.bestStreak){ S.bestStreak = streak; localStorage.setItem('rw-best-streak', S.bestStreak); }
+  }
+  S.releases.push({ t: now, kind });
+  if (S.releases.length > 500) S.releases = S.releases.slice(-500);
+  S.lastRelease = now;
+  localStorage.setItem('rw-releases', JSON.stringify(S.releases));
+  localStorage.setItem('rw-last-release', String(now));
+  renderEnergy(); updateHomeStats();
+}
+document.getElementById('logPartnered').onclick = () => { logRelease('partnered'); alert('Partnered release logged. Not counted as relapse.'); };
+document.getElementById('logSolo').onclick = () => { logRelease('solo'); alert('Solo release logged. Reset. Begin again.'); };
+document.getElementById('resetRet').onclick = () => {
+  if (confirm('Reset retention timer to now?')){ logRelease('manual'); }
+};
+
+/* ================= KEGEL TRAINING ================= */
+const ROUTINES = {
+  beginner:    { name:'Grade 4 · Foundation',  reps:5,  hold:3, rest:3, rounds:2, pulse:0 },
+  intermediate:{ name:'Grade 2 · Endurance',   reps:10, hold:5, rest:5, rounds:2, pulse:0 },
+  advanced:    { name:'Special Grade · Control', reps:15, hold:5, rest:5, rounds:3, pulse:5 },
+};
+let kegelState = null;
+
+document.querySelectorAll('.routine').forEach(r => r.onclick = () => startKegel(r.dataset.routine));
+
+function startKegel(key){
+  const cfg = ROUTINES[key];
+  kegelState = { cfg, round:1, rep:1, phase:'ready', cancelled:false };
+  document.getElementById('kegelLabel').textContent = cfg.name;
+  show('screen-kegel');
+  buildDots();
+  setKegelPhase('Get Ready', 'Squeeze the muscles you\'d use to stop urination mid-flow. Do not clench abs, thighs, or glutes.', 3, () => runRep());
+}
+
+function buildDots(){
+  const cfg = kegelState.cfg;
+  const total = cfg.reps * cfg.rounds;
+  const el = document.getElementById('kegelDots');
+  el.innerHTML = Array.from({length: total}, (_,i) => `<div class="dot" data-i="${i}"></div>`).join('');
+}
+function markDot(idx, cls){
+  const d = document.querySelector(`#kegelDots .dot[data-i="${idx}"]`);
+  if (!d) return;
+  d.classList.remove('current');
+  if (cls) d.classList.add(cls);
+}
+function setKegelPhase(phase, cue, seconds, done){
+  document.getElementById('kegelPhase').textContent = phase;
+  document.getElementById('kegelCue').textContent = cue;
+  const el = document.getElementById('kegelTimer');
+  let t = seconds;
+  el.textContent = t;
+  const iv = setInterval(() => {
+    if (kegelState.cancelled){ clearInterval(iv); return; }
+    t--;
+    el.textContent = t > 0 ? t : 0;
+    if (t <= 0){ clearInterval(iv); done && done(); }
+  }, 1000);
+  kegelState._iv = iv;
+}
+function runRep(){
+  if (kegelState.cancelled) return;
+  const { cfg, round, rep } = kegelState;
+  const globalIdx = (round-1)*cfg.reps + (rep-1);
+  markDot(globalIdx, 'current');
+
+  setKegelPhase('Squeeze', 'Hold the contraction. Breathe normally.', cfg.hold, () => {
+    markDot(globalIdx, 'done');
+    setKegelPhase('Rest', 'Fully release. Let the muscle relax.', cfg.rest, () => {
+      if (cfg.pulse && rep <= cfg.reps){
+        runPulse(globalIdx, () => advance());
+      } else advance();
+    });
+  });
+}
+function runPulse(globalIdx, done){
+  let p = 0;
+  const cfg = kegelState.cfg;
+  const pulseStep = () => {
+    if (kegelState.cancelled) return;
+    if (p >= cfg.pulse){ done(); return; }
+    p++;
+    setKegelPhase(`Pulse ${p}/${cfg.pulse}`, 'Quick squeeze and release. 1 second each.', 1, pulseStep);
+  };
+  pulseStep();
+}
+function advance(){
+  if (kegelState.cancelled) return;
+  const { cfg } = kegelState;
+  if (kegelState.rep < cfg.reps){
+    kegelState.rep++;
+    runRep();
+  } else if (kegelState.round < cfg.rounds){
+    kegelState.round++;
+    kegelState.rep = 1;
+    setKegelPhase('Round Complete', 'Rest 15 seconds, then begin next round.', 15, runRep);
+  } else {
+    document.getElementById('kegelPhase').textContent = 'Complete';
+    document.getElementById('kegelTimer').textContent = '✓';
+    document.getElementById('kegelCue').textContent = 'Training logged. The muscle grows with consistency.';
+    S.kegelHistory.push({ t: Date.now(), routine: cfg.name });
+    if (S.kegelHistory.length > 200) S.kegelHistory = S.kegelHistory.slice(-200);
+    localStorage.setItem('rw-kegel', JSON.stringify(S.kegelHistory));
+  }
+}
+document.getElementById('kegelStart').onclick = () => { if (kegelState) runRep(); };
+document.getElementById('kegelStop').onclick = () => {
+  if (kegelState){ kegelState.cancelled = true; clearInterval(kegelState._iv); }
+  show('screen-train');
+};
+
+/* ================= HOME STATS ================= */
+function updateHomeStats(){
+  const d = gradeData();
+  const short = d.grade.rank === 'Special Grade' ? 'SG' : d.grade.rank.replace('Grade ','G');
+  document.getElementById('homeGrade').textContent = short;
+  if (S.lastRelease){
+    const ms = Date.now() - S.lastRelease;
+    const days = Math.floor(ms/86400000);
+    const hours = Math.floor((ms%86400000)/3600000);
+    document.getElementById('homeRetention').textContent = `${days}d ${hours}h`;
+  } else {
+    document.getElementById('homeRetention').textContent = '—';
+  }
+}
+setInterval(updateHomeStats, 60000);
+updateHomeStats();
+
+/* ================= SERVICE WORKER ================= */
+if ('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+      </html>reen" id="screen-choice">
     <p class="step-label">Step 1 / Redirect</p>
     <h2 class="step-title">Choose your path</h2>
     <p class="step-body">Pick what fits right now.</p>
