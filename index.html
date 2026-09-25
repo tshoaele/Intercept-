@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a0f" />
+<title>Rewire</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============ THEME TOKENS ============ */
+  :root {
+    --bg: #0a0a0f;
+    --bg-2: #12121c;
+    --surface: #1a1a28;
+    --surface-2: #22223a;
+    --text: #eaeaf5;
+    --text-dim: #8a8aa8;
+    --accent: #00e5ff;
+    --accent-2: #b14aff;
+    --glow: 0 0 24px rgba(0, 229, 255, 0.35);
+    --border: rgba(0, 229, 255, 0.15);
+    --radius: 18px;
+    --font-display: 'Orbitron', 'Rajdhani', system-ui, sans-serif;
+    --font-body: 'Rajdhani', 'Orbitron', system-ui, sans-serif;
+    color-scheme: dark;
+  }
+
+  [data-theme="light"] {
+    --bg: #f4f6fb;
+    --bg-2: #e8ecf6;
+    --surface: #ffffff;
+    --surface-2: #eef1fa;
+    --text: #0d0d1a;
+    --text-dim: #5a5a78;
+    --accent: #0077cc;
+    --accent-2: #7a2ecc;
+    --glow: 0 0 20px rgba(0, 119, 204, 0.25);
+    --border: rgba(0, 119, 204, 0.2);
+    color-scheme: light;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    overscroll-behavior: none;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(177, 74, 255, 0.12), transparent 55%),
+      radial-gradient(circle at 85% 100%, rgba(0, 229, 255, 0.10), transparent 55%),
+      var(--bg);
+  }
+
+  /* ============ HEADER ============ */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 22px;
+    padding-top: calc(20px + env(safe-area-inset-top));
+  }
+
+  .brand {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.25rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .brand span { color: var(--accent); text-shadow: var(--glow); }
+
+  .header-actions { display: flex; gap: 10px; }
+
+  .icon-btn {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.25s ease;
+  }
+  .icon-btn:active { transform: scale(0.92); }
+  .icon-btn.active { border-color: var(--accent); box-shadow: var(--glow); color: var(--accent); }
+
+  /* ============ MAIN ============ */
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 24px 40px;
+    text-align: center;
+    position: relative;
+  }
+
+  .screen { display: none; width: 100%; max-width: 480px; animation: fade 0.4s ease; }
+  .screen.active { display: flex; flex-direction: column; align-items: center; }
+
+  @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  /* --- HOME --- */
+  .tagline {
+    font-size: 0.85rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 40px;
+  }
+
+  .urge-btn {
+    position: relative;
+    width: 210px; height: 210px;
+    border-radius: 50%;
+    border: none;
+    background: radial-gradient(circle at 35% 30%, var(--accent), var(--accent-2));
+    color: #fff;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 50px rgba(0, 229, 255, 0.35), 0 0 90px rgba(177, 74, 255, 0.25);
+    transition: transform 0.25s ease, box-shadow 0.3s ease;
+    animation: pulse 3.5s ease-in-out infinite;
+  }
+  .urge-btn:active { transform: scale(0.94); }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 50px rgba(0,229,255,0.35), 0 0 90px rgba(177,74,255,0.25); }
+    50% { box-shadow: 0 0 70px rgba(0,229,255,0.55), 0 0 120px rgba(177,74,255,0.4); }
+  }
+
+  .urge-btn::after {
+    content: "";
+    position: absolute; inset: -14px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    animation: ring 3.5s ease-in-out infinite;
+  }
+  @keyframes ring {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.08); opacity: 0.15; }
+  }
+
+  .hint {
+    margin-top: 36px;
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    max-width: 280px;
+    line-height: 1.5;
+  }
+
+  /* --- REDIRECT --- */
+  .step-label {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+
+  .step-body {
+    font-size: 1.05rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 34px;
+  }
+
+  .breath-circle {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    display: grid;
+    place-items: center;
+    margin: 0 auto 30px;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--accent);
+    box-shadow: var(--glow);
+  }
+  .breath-circle.inhale { animation: expand 4s ease-in-out forwards; }
+  .breath-circle.hold   { transform: scale(1.35); }
+  .breath-circle.exhale { animation: contract 4s ease-in-out forwards; }
+
+  @keyframes expand   { from { transform: scale(1); }    to { transform: scale(1.35); } }
+  @keyframes contract { from { transform: scale(1.35); } to { transform: scale(1); } }
+
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 17px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: all 0.25s ease;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn.primary {
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    color: #fff;
+    border: none;
+    box-shadow: 0 0 30px rgba(0,229,255,0.3);
+  }
+  .btn.ghost { background: transparent; color: var(--text-dim); border-color: transparent; }
+
+  /* --- CHOICE GRID --- */
+  .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-bottom: 8px; }
+  .choice {
+    padding: 22px 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--font-body);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.25s ease;
+  }
+  .choice:active { transform: scale(0.96); border-color: var(--accent); }
+  .choice .emoji { display: block; font-size: 1.7rem; margin-bottom: 8px; }
+  .choice .label {
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* --- LOG --- */
+  .log-list { width: 100%; text-align: left; margin-bottom: 20px; max-height: 50vh; overflow-y: auto; }
+  .log-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  .log-item .when { color: var(--text-dim); font-size: 0.8rem; }
+  .log-item .what { font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+  .empty { color: var(--text-dim); font-size: 0.95rem; padding: 30px 0; }
+
+  .toggle-row {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 100%; padding: 16px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .toggle-row span { font-size: 0.95rem; }
+
+  .switch { position: relative; width: 48px; height: 28px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; inset: 0;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .slider::before {
+    content: ""; position: absolute;
+    height: 20px; width: 20px; left: 3px; top: 3px;
+    background: var(--text-dim);
+    border-radius: 50%;
+    transition: 0.3s;
+  }
+  .switch input:checked + .slider { background: var(--accent); border-color: var(--accent); }
+  .switch input:checked + .slider::before { transform: translateX(20px); background: #fff; }
+
+  footer {
+    text-align: center;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 16px 0 calc(16px + env(safe-area-inset-bottom));
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">RE<span>WIRE</span></div>
+  <div class="header-actions">
+    <button class="icon-btn" id="themeBtn" aria-label="Toggle theme">☾</button>
+    <button class="icon-btn" id="logBtn" aria-label="Open log">☰</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <section class="screen active" id="screen-home">
+    <p class="tagline">Urge Interrupt</p>
+    <button class="urge-btn" id="urgeBtn">I Feel<br>An Urge</button>
+    <p class="hint">Tap when it starts. You have a few minutes. Let's use them.</p>
+  </section>
+
+  <!-- CHOICE -->
+  <section class="screen" id="screen-choice">
+    <p class="step-label">Step 1 / Redirect</p>
+    <h2 class="step-title">Choose your path</h2>
+    <p class="step-body">Pick what fits right now.</p>
+    <div class="choice-grid">
+      <button class="choice" data-path="physical"><span class="emoji">⚡</span><span class="label">Physical</span></button>
+      <button class="choice" data-path="mental"><span class="emoji">🧠</span><span class="label">Mental</span></button>
+      <button class="choice" data-path="spiritual"><span class="emoji">✦</span><span class="label">Spiritual</span></button>
+      <button class="choice" data-path="breathe"><span class="emoji">◯</span><span class="label">Breathe</span></button>
+    </div>
+    <button class="btn ghost" id="backHome">Back</button>
+  </section>
+
+  <!-- ACTION -->
+  <section class="screen" id="screen-action">
+    <p class="step-label" id="actionLabel">Redirect</p>
+    <h2 class="step-title" id="actionTitle"></h2>
+    <p class="step-body" id="actionBody"></p>
+    <div id="breathWrap" style="display:none">
+      <div class="breath-circle" id="breathCircle">Ready</div>
+    </div>
+    <button class="btn primary" id="doneBtn">I Made It Through</button>
+    <button class="btn ghost" id="againBtn">Show Another</button>
+  </section>
+
+  <!-- LOG -->
+  <section class="screen" id="screen-log">
+    <p class="step-label">Private Log</p>
+    <h2 class="step-title">Your Record</h2>
+    <div class="toggle-row">
+      <span>Enable urge log</span>
+      <label class="switch">
+        <input type="checkbox" id="logToggle" />
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="log-list" id="logList"><p class="empty">Log is off. Turn it on to start recording.</p></div>
+    <button class="btn ghost" id="clearLog">Clear Log</button>
+    <button class="btn ghost" id="backHome2">Back</button>
+  </section>
+
+</main>
+
+<footer>Offline • Private • Yours</footer>
+
+<script>
+/* ============ STATE ============ */
+const state = {
+  theme: localStorage.getItem('rw-theme') || 'dark',
+  logEnabled: localStorage.getItem('rw-log-enabled') === 'true',
+  log: JSON.parse(localStorage.getItem('rw-log') || '[]'),
+  lastPath: null,
+};
+
+/* ============ THEME ============ */
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', state.theme);
+  document.querySelector('meta[name=theme-color]').setAttribute('content', state.theme === 'dark' ? '#0a0a0f' : '#f4f6fb');
+  document.getElementById('themeBtn').textContent = state.theme === 'dark' ? '☾' : '☀';
+}
+document.getElementById('themeBtn').addEventListener('click', () => {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('rw-theme', state.theme);
+  applyTheme();
+});
+applyTheme();
+
+/* ============ NAV ============ */
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+document.getElementById('urgeBtn').addEventListener('click', () => {
+  recordUrge('started');
+  show('screen-choice');
+});
+document.getElementById('backHome').addEventListener('click', () => show('screen-home'));
+document.getElementById('backHome2').addEventListener('click', () => show('screen-home'));
+
+/* ============ REDIRECT CONTENT ============ */
+const redirects = {
+  physical: [
+    { title: 'Cold Water', body: 'Go to the bathroom. Run cold water over your wrists and splash your face. 30 seconds. The urge will drop.' },
+    { title: 'Twenty Push-Ups', body: 'Drop and do 20. Slow. Feel the burn. Your body redirects the energy, and your mind follows.' },
+    { title: 'Step Outside', body: 'Walk out your door. Even 2 minutes. Fresh air, changed scenery, broken loop.' },
+    { title: 'Stand & Stretch', body: 'Stand up. Reach for the ceiling. Hold 10 seconds. Roll your shoulders. Repeat 3 times.' },
+  ],
+  mental: [
+    { title: 'Name It', body: 'Say out loud: "This is an urge. It is not me. It will pass in 5 minutes." Naming it weakens it.' },
+    { title: '5-4-3-2-1 Ground', body: 'Name 5 things you see, 4 you hear, 3 you feel, 2 you smell, 1 you taste. Brings you back to the room.' },
+    { title: 'Future You', body: 'Picture yourself 10 minutes from now — calm, in control, glad you stopped. That person is real. Step toward him.' },
+    { title: 'Read This Twice', body: 'The urge is a wave. You do not have to ride it to shore. You can just let it pass under you.' },
+  ],
+  spiritual: [
+    { title: 'Gratitude', body: 'Name 3 things you are grateful for right now. Small ones count. Speak them aloud.' },
+    { title: 'Stillness', body: 'Sit. Close your eyes. 60 seconds of silence. Let thoughts come and go without chasing them.' },
+    { title: 'Reflection', body: 'Ask yourself: "What do I actually need right now?" Often it is rest, comfort, or connection — not this.' },
+    { title: 'Breathe & Release', body: 'Inhale peace. Exhale tension. Repeat silently 10 times.' },
+  ],
+  breathe: [
+    { title: 'Box Breathing', body: 'Follow the circle. Inhale 4 — hold 4 — exhale 4 — hold 4.', breath: true },
+    { title: '4-7-8 Calm', body: 'Inhale 4 — hold 7 — exhale 8. Slows the heart, quiets the urge.', breath: true },
+  ],
+};
+
+let currentPath = null;
+let currentIndex = 0;
+
+document.querySelectorAll('.choice').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentPath = btn.dataset.path;
+    currentIndex = 0;
+    renderAction();
+  });
+});
+
+function renderAction() {
+  const list = redirects[currentPath];
+  const item = list[currentIndex % list.length];
+
+  document.getElementById('actionLabel').textContent = currentPath.charAt(0).toUpperCase() + currentPath.slice(1);
+  document.getElementById('actionTitle').textContent = item.title;
+  document.getElementById('actionBody').textContent = item.body;
+
+  const breathWrap = document.getElementById('breathWrap');
+  const circle = document.getElementById('breathCircle');
+
+  if (item.breath) {
+    breathWrap.style.display = 'block';
+    circle.className = 'breath-circle';
+    circle.textContent = 'Ready';
+    circle.onclick = runBreathCycle;
+  } else {
+    breathWrap.style.display = 'none';
+  }
+
+  show('screen-action');
+}
+
+function runBreathCycle() {
+  const c = document.getElementById('breathCircle');
+  const phases = ['Inhale', 'Hold', 'Exhale', 'Hold'];
+  let i = 0;
+  c.textContent = phases[0];
+  c.className = 'breath-circle inhale';
+
+  const tick = () => {
+    i++;
+    if (i >= phases.length * 2) { c.textContent = 'Done'; c.className = 'breath-circle'; return; }
+    const phase = phases[i % phases.length];
+    c.textContent = phase;
+    c.className = 'breath-circle ' + (phase === 'Inhale' ? 'inhale' : phase === 'Exhale' ? 'exhale' : 'hold');
+    setTimeout(tick, 4000);
+  };
+  setTimeout(tick, 4000);
+}
+
+document.getElementById('againBtn').addEventListener('click', () => {
+  currentIndex++;
+  renderAction();
+});
+
+document.getElementById('doneBtn').addEventListener('click', () => {
+  recordUrge('completed');
+  show('screen-home');
+});
+
+/* ============ LOG ============ */
+function recordUrge(type) {
+  if (!state.logEnabled) return;
+  state.log.push({ t: Date.now(), type, path: currentPath || null });
+  if (state.log.length > 300) state.log = state.log.slice(-300);
+  localStorage.setItem('rw-log', JSON.stringify(state.log));
+  renderLog();
+}
+
+function renderLog() {
+  const list = document.getElementById('logList');
+  if (!state.logEnabled) {
+    list.innerHTML = '<p class="empty">Log is off. Turn it on to start recording.</p>';
+    return;
+  }
+  if (state.log.length === 0) {
+    list.innerHTML = '<p class="empty">No entries yet.</p>';
+    return;
+  }
+  list.innerHTML = state.log.slice().reverse().map(e => {
+    const d = new Date(e.t);
+    const when = d.toLocaleDateString() + ' · ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return `<div class="log-item"><span class="when">${when}</span><span class="what">${e.type}</span></div>`;
+  }).join('');
+}
+
+document.getElementById('logBtn').addEventListener('click', () => {
+  document.getElementById('logToggle').checked = state.logEnabled;
+  renderLog();
+  show('screen-log');
+});
+
+document.getElementById('logToggle').addEventListener('change', (e) => {
+  state.logEnabled = e.target.checked;
+  localStorage.setItem('rw-log-enabled', state.logEnabled);
+  renderLog();
+});
+
+document.getElementById('clearLog').addEventListener('click', () => {
+  if (confirm('Clear all log entries?')) {
+    state.log = [];
+    localStorage.removeItem('rw-log');
+    renderLog();
+  }
+});
+
+/* ============ SERVICE WORKER ============ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>
