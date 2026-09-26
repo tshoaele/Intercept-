@@ -1,7 +1,7 @@
 {
   "name": "Rewire",
   "short_name": "Rewire",
-  "description": "Private urge redirect tool",
+  "description": "Private urge redirect, retention & training tool",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
