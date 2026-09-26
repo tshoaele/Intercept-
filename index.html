@@ -4,13 +4,14 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#0a0a0f" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'" />
 <title>Rewire</title>
 <link rel="manifest" href="manifest.json" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet" />
 <style>
-  /* ===== LOCAL RADJA FONT (falls back gracefully) ===== */
+  /* ===== LOCAL RADJA FONT (falls back gracefully if file absent) ===== */
   @font-face {
     font-family: 'Radja';
     src: url('fonts/Radja.ttf') format('truetype'),
@@ -24,18 +25,17 @@
     --bg:#0a0a0f; --bg-2:#12121c; --surface:#1a1a28; --surface-2:#22223a;
     --text:#eaeaf5; --text-dim:#8a8aa8;
     --accent:#00e5ff; --accent-2:#b14aff;
-    --red:#ff3b6b; --blue:#3b8bff; --purple:#b14aff; --gold:#ffc542; --green:#2ee6a6;
+    --red:#ff3b6b; --blue:#3b8bff; --gold:#ffc542; --green:#2ee6a6;
     --glow:0 0 24px rgba(0,229,255,.35);
     --border:rgba(0,229,255,.15);
     --radius:18px;
-    /* Radja first, then futuristic fallbacks */
     --font-display:'Radja','Orbitron','Rajdhani',system-ui,sans-serif;
-    --font-body:'Radja','Rajdhani','Orbitron',system-ui,sans-serif;
+    --font-body:'Rajdhani','Orbitron',system-ui,sans-serif;
     color-scheme:dark;
   }
   [data-theme="light"]{
     --bg:#f4f6fb; --bg-2:#e8ecf6; --surface:#fff; --surface-2:#eef1fa;
-    --text:#0d0d1a; --text-dim:#5a5a78;
+    --text:#0d0d1a; --text-dim:#3f3f57;
     --accent:#0077cc; --accent-2:#7a2ecc;
     --glow:0 0 20px rgba(0,119,204,.25);
     --border:rgba(0,119,204,.2);
@@ -62,7 +62,8 @@
   .welcome{font-size:1.4rem;font-family:var(--font-display);font-weight:700;margin-bottom:8px}
   .subtext{font-size:.92rem;color:var(--text-dim);margin-bottom:28px;line-height:1.5;max-width:320px}
 
-  .urge-btn{position:relative;width:200px;height:200px;border-radius:50%;border:none;
+  .urge-btn{position:relative;width:clamp(160px,55vw,200px);height:clamp(160px,55vw,200px);
+    border-radius:50%;border:none;
     background:radial-gradient(circle at 35% 30%,var(--accent),var(--accent-2));color:#fff;
     font-family:var(--font-display);font-weight:800;font-size:1rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
     box-shadow:0 0 50px rgba(0,229,255,.35),0 0 90px rgba(177,74,255,.25);
@@ -76,7 +77,7 @@
 
   .big-timer{margin-top:28px;padding:18px 22px;border-radius:18px;background:var(--surface);border:1px solid var(--border);width:100%;max-width:340px}
   .big-timer .label{font-family:var(--font-display);font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
-  .big-timer .time{font-family:var(--font-display);font-size:1.55rem;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:.03em}
+  .big-timer .time{font-family:var(--font-display);font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:.03em;font-size:clamp(1.1rem,5vw,1.55rem)}
 
   .menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:22px}
   .menu-btn{padding:18px 12px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;
@@ -102,8 +103,6 @@
     letter-spacing:.14em;text-transform:uppercase;cursor:pointer;margin-bottom:10px;transition:all .25s}
   .btn:active{transform:scale(.97)}
   .btn.primary{background:linear-gradient(120deg,var(--accent),var(--accent-2));color:#fff;border:none}
-  .btn.blue{background:linear-gradient(120deg,var(--blue),var(--accent));color:#fff;border:none}
-  .btn.red{background:linear-gradient(120deg,var(--red),var(--accent-2));color:#fff;border:none}
   .btn.gold{background:linear-gradient(120deg,var(--gold),var(--red));color:#1a1a28;border:none;font-weight:800}
   .btn.green{background:linear-gradient(120deg,var(--green),var(--accent));color:#0a0a0f;border:none;font-weight:800}
   .btn.ghost{background:transparent;color:var(--text-dim);border-color:transparent}
@@ -127,7 +126,7 @@
 
   .timer-card{padding:22px}
   .timer-label{font-family:var(--font-display);font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
-  .timer-value{font-family:var(--font-display);font-size:1.9rem;font-weight:800;color:var(--accent);letter-spacing:.03em;margin-bottom:6px;font-variant-numeric:tabular-nums}
+  .timer-value{font-family:var(--font-display);font-weight:800;color:var(--accent);letter-spacing:.03em;margin-bottom:6px;font-variant-numeric:tabular-nums;font-size:clamp(1.1rem,5vw,1.9rem)}
   .timer-sub{font-size:.82rem;color:var(--text-dim)}
 
   .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-bottom:14px}
@@ -170,8 +169,18 @@
   .time-input{width:100%;padding:14px;border-radius:12px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-body);font-size:1rem;margin-bottom:10px;text-align:center}
   .time-input:focus{outline:none;border-color:var(--accent)}
 
-  footer{text-align:center;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);
-    padding:14px 0 calc(14px + env(safe-area-inset-bottom));opacity:.6}
+  footer{text-align:center;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);
+    padding:14px 0 calc(14px + env(safe-area-inset-bottom));opacity:.75}
+
+  #toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(20px);
+    background:var(--surface);color:var(--text);border:1px solid var(--border);padding:12px 20px;
+    border-radius:14px;font-family:var(--font-display);font-size:.75rem;letter-spacing:.1em;
+    text-transform:uppercase;opacity:0;pointer-events:none;transition:all .3s;z-index:9999;max-width:85vw;text-align:center}
+
+  /* Confirm modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:grid;place-items:center;z-index:9999;padding:20px}
+  .modal-box{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px;max-width:320px;width:100%;text-align:center}
+  .modal-msg{margin-bottom:20px;font-size:.95rem;line-height:1.5}
 </style>
 </head>
 <body>
@@ -191,16 +200,12 @@
   <section class="screen active" id="screen-home">
     <p class="welcome">Welcome back</p>
     <p class="subtext">Tap the button when an urge hits. We'll help you ride it out.</p>
-
     <button class="urge-btn" id="urgeBtn">I Feel<br>An Urge</button>
-
     <div class="big-timer">
       <div class="label">Retention Timer</div>
       <div class="time" id="homeTimer">00d 00h 00m 00s</div>
     </div>
-
     <p class="home-hint">Your timer runs until you reset it. No cap, no auto-stop.</p>
-
     <div class="menu">
       <button class="menu-btn" id="navGrade"><span class="ico">✦</span>Progress</button>
       <button class="menu-btn" id="navEnergy"><span class="ico">◉</span>Retention</button>
@@ -209,7 +214,6 @@
     </div>
   </section>
 
-  <!-- ================= REDIRECT CHOICE ================= -->
   <section class="screen" id="screen-choice">
     <p class="step-label">Step 1 of 2</p>
     <h2 class="step-title">What do you need right now?</h2>
@@ -223,7 +227,6 @@
     <button class="btn ghost" data-home>Back Home</button>
   </section>
 
-  <!-- ================= REDIRECT ACTION ================= -->
   <section class="screen" id="screen-action">
     <p class="step-label">Step 2 of 2</p>
     <h2 class="step-title" id="actionTitle"></h2>
@@ -236,7 +239,6 @@
     <button class="btn ghost" data-home>Back Home</button>
   </section>
 
-  <!-- ================= PROGRESS ================= -->
   <section class="screen" id="screen-grade">
     <p class="step-label">Progress</p>
     <h2 class="step-title">Your Level</h2>
@@ -254,7 +256,6 @@
     <button class="btn ghost" data-home>Back Home</button>
   </section>
 
-  <!-- ================= RETENTION ================= -->
   <section class="screen" id="screen-energy">
     <p class="step-label">Retention</p>
     <h2 class="step-title">Your Timer</h2>
@@ -272,11 +273,14 @@
     <button class="btn ghost" data-home>Back Home</button>
   </section>
 
-  <!-- ================= TRAINING ================= -->
   <section class="screen" id="screen-train">
     <p class="step-label">Training</p>
     <h2 class="step-title">Pelvic Floor</h2>
     <p class="helper">Kegels strengthen the muscles that control erections and ejaculation. They do not increase sperm count — sperm is hormonal. Train for control and strength.</p>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="k">Sessions Done</div><div class="v" id="kegelCount">0</div></div>
+      <div class="stat-box"><div class="k">Last Session</div><div class="v" id="kegelLast">—</div></div>
+    </div>
     <div class="routine-list">
       <div class="routine" data-routine="beginner">
         <div class="rname">Beginner</div>
@@ -294,7 +298,6 @@
     <button class="btn ghost" data-home>Back Home</button>
   </section>
 
-  <!-- ================= KEGEL ================= -->
   <section class="screen" id="screen-kegel">
     <p class="step-label" id="kegelLabel">Training</p>
     <div class="kegel-phase" id="kegelPhase">Get Ready</div>
@@ -305,7 +308,6 @@
     <button class="btn ghost" id="kegelStop">Stop</button>
   </section>
 
-  <!-- ================= HISTORY ================= -->
   <section class="screen" id="screen-log">
     <p class="step-label">History</p>
     <h2 class="step-title">Your Record</h2>
@@ -319,12 +321,9 @@
     <button class="btn ghost" data-home>Back Home</button>
   </section>
 
-  <!-- ================= SETTINGS ================= -->
   <section class="screen" id="screen-settings">
     <p class="step-label">Settings</p>
     <h2 class="step-title">Options</h2>
-
-    <!-- Daily reminder -->
     <div class="toggle-row">
       <span>Daily training reminder</span>
       <label class="switch"><input type="checkbox" id="reminderToggle" /><span class="slider"></span></label>
@@ -333,9 +332,8 @@
     <p class="helper">Reminder fires once a day at this time. Works only while the app is open in a tab or installed and running in the background. Browsers do not allow PWAs to schedule notifications when fully closed.</p>
     <button class="btn primary small" id="testReminder">Send Test Reminder</button>
 
-    <!-- Backup -->
     <p class="step-label" style="margin-top:26px">Backup</p>
-    <button class="btn blue" id="exportBtn">Export Backup File</button>
+    <button class="btn primary" id="exportBtn">Export Backup File</button>
     <button class="btn ghost" id="importBtn">Import Backup File</button>
     <input type="file" id="importFile" accept="application/json" style="display:none" />
 
@@ -346,20 +344,100 @@
 
 <footer>Offline · Private · Yours</footer>
 
+<div id="toast"></div>
+
 <script>
+/* ================= HELPERS ================= */
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 2400);
+}
+
+function confirmAction(message){
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+
+    const box = document.createElement('div');
+    box.className = 'modal-box';
+
+    const msg = document.createElement('p');
+    msg.className = 'modal-msg';
+    msg.textContent = message;
+
+    const yes = document.createElement('button');
+    yes.textContent = 'Confirm';
+    yes.className = 'btn primary';
+
+    const no = document.createElement('button');
+    no.textContent = 'Cancel';
+    no.className = 'btn ghost';
+
+    const cleanup = (val) => { overlay.remove(); resolve(val); };
+    yes.onclick = () => cleanup(true);
+    no.onclick = () => cleanup(false);
+    overlay.onclick = (e) => { if (e.target === overlay) cleanup(false); };
+
+    box.appendChild(msg);
+    box.appendChild(yes);
+    box.appendChild(no);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+  });
+}
+
+function safeInt(v, min, max, fallback){
+  const n = parseInt(v, 10);
+  if (!isFinite(n)) return fallback;
+  if (n < min || n > max) return fallback;
+  return n;
+}
+
+const notificationsSupported = ('Notification' in window);
+
+const REDIRECT_PATHS = ['physical','mental','spiritual','breathe'];
+
 /* ================= STATE ================= */
 const S = {
-  theme: localStorage.getItem('rw-theme') || 'dark',
+  theme: localStorage.getItem('rw-theme') === 'light' ? 'light' : 'dark',
   logEnabled: localStorage.getItem('rw-log-enabled') === 'true',
-  log: JSON.parse(localStorage.getItem('rw-log') || '[]'),
-  resets: JSON.parse(localStorage.getItem('rw-resets') || '[]'),
-  timerStart: parseInt(localStorage.getItem('rw-timer-start') || '0', 10),
-  bestStreak: parseInt(localStorage.getItem('rw-best-streak') || '0', 10),
-  kegelHistory: JSON.parse(localStorage.getItem('rw-kegel') || '[]'),
+  log: safeParseArray('rw-log').filter(e =>
+    e && typeof e === 'object' &&
+    typeof e.t === 'number' && isFinite(e.t) && e.t > 0 && e.t <= Date.now() &&
+    (e.type === 'started' || e.type === 'completed') &&
+    (e.path === null || REDIRECT_PATHS.includes(e.path))
+  ).slice(-400),
+  resets: safeParseArray('rw-resets').filter(n =>
+    typeof n === 'number' && isFinite(n) && n > 0 && n <= Date.now()
+  ).slice(-500),
+  timerStart: safeInt(localStorage.getItem('rw-timer-start'), 0, Date.now(), 0),
+  bestStreak: safeInt(localStorage.getItem('rw-best-streak'), 0, 100 * 365 * 24 * 3600 * 1000, 0),
+  kegelHistory: safeParseArray('rw-kegel').filter(e =>
+    e && typeof e === 'object' &&
+    typeof e.t === 'number' && isFinite(e.t) && e.t > 0 && e.t <= Date.now()
+  ).slice(-200),
   reminderOn: localStorage.getItem('rw-reminder-on') === 'true',
-  reminderTime: localStorage.getItem('rw-reminder-time') || '20:00',
-  lastReminderDay: localStorage.getItem('rw-last-reminder-day') || '',
+  reminderTime: /^\d{2}:\d{2}$/.test(localStorage.getItem('rw-reminder-time') || '')
+    ? localStorage.getItem('rw-reminder-time') : '20:00',
+  lastReminderDay: /^\d{4}-\d{2}-\d{2}$/.test(localStorage.getItem('rw-last-reminder-day') || '')
+    ? localStorage.getItem('rw-last-reminder-day') : '',
 };
+
+function safeParseArray(key){
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
+}
 
 /* ================= THEME ================= */
 function applyTheme(){
@@ -384,6 +462,7 @@ function show(id){
   if (id === 'screen-log') renderLog();
   if (id === 'screen-home') renderHomeTimer();
   if (id === 'screen-settings') renderSettings();
+  if (id === 'screen-train') renderTrainingStats();
 }
 document.querySelectorAll('[data-home]').forEach(b => b.onclick = () => show('screen-home'));
 document.getElementById('homeBtn').onclick = () => show('screen-home');
@@ -421,26 +500,45 @@ const redirects = {
   ],
 };
 let currentPath = null, currentIndex = 0;
+let breathRunning = false;
 
 document.querySelectorAll('.choice').forEach(b => b.onclick = () => {
-  currentPath = b.dataset.path; currentIndex = 0; renderAction();
+  const path = b.dataset.path;
+  if (!REDIRECT_PATHS.includes(path)) return;
+  currentPath = path; currentIndex = 0; renderAction();
 });
+
 function renderAction(){
+  if (!currentPath || !redirects[currentPath]) return;
   const list = redirects[currentPath], item = list[currentIndex % list.length];
   document.getElementById('actionTitle').textContent = item.title;
   document.getElementById('actionBody').textContent = item.body;
   const wrap = document.getElementById('breathWrap'), c = document.getElementById('breathCircle');
-  if (item.breath){ wrap.style.display='block'; c.className='breath-circle'; c.textContent='Tap to start'; c.onclick = runBreath; }
-  else wrap.style.display='none';
+
+  breathRunning = false;
+
+  if (item.breath){
+    wrap.style.display = 'block';
+    c.className = 'breath-circle';
+    c.textContent = 'Tap to start';
+    c.onclick = runBreath;
+  } else {
+    wrap.style.display = 'none';
+  }
   show('screen-action');
 }
+
 function runBreath(){
+  if (breathRunning) return;
+  breathRunning = true;
+
   const c = document.getElementById('breathCircle');
   const phases = ['Inhale','Hold','Exhale','Hold']; let i = 0;
   c.textContent = phases[0]; c.className = 'breath-circle inhale';
+
   const tick = () => {
     i++;
-    if (i >= 8){ c.textContent='Done'; c.className='breath-circle'; return; }
+    if (i >= 8){ c.textContent = 'Done'; c.className = 'breath-circle'; breathRunning = false; return; }
     const p = phases[i % 4];
     c.textContent = p;
     c.className = 'breath-circle ' + (p==='Inhale'?'inhale':p==='Exhale'?'exhale':'hold');
@@ -448,36 +546,85 @@ function runBreath(){
   };
   setTimeout(tick, 4000);
 }
-document.getElementById('againBtn').onclick = () => { currentIndex++; renderAction(); };
-document.getElementById('doneBtn').onclick = () => { recordUrge('completed'); show('screen-home'); };
 
-/* ================= URGE LOG ================= */
+document.getElementById('againBtn').onclick = () => { currentIndex++; renderAction(); };
+document.getElementById('doneBtn').onclick = () => {
+  breathRunning = false;
+  recordUrge('completed');
+  show('screen-home');
+};
+
+/* ================= URGE LOG (rate-limited + XSS-safe) ================= */
+let lastUrgeTime = 0;
 function recordUrge(type){
   if (!S.logEnabled) return;
-  S.log.push({ t: Date.now(), type, path: currentPath });
+  if (type !== 'started' && type !== 'completed') return;
+
+  const now = Date.now();
+  if (now - lastUrgeTime < 1000) return;
+  lastUrgeTime = now;
+
+  S.log.push({ t: now, type, path: currentPath });
   if (S.log.length > 400) S.log = S.log.slice(-400);
   localStorage.setItem('rw-log', JSON.stringify(S.log));
   renderLog();
 }
+
 function renderLog(){
   const el = document.getElementById('logList');
-  if (!S.logEnabled){ el.innerHTML = '<p class="empty">History is off.</p>'; return; }
-  if (!S.log.length){ el.innerHTML = '<p class="empty">No entries yet.</p>'; return; }
-  el.innerHTML = S.log.slice().reverse().map(e => {
+  el.innerHTML = '';
+
+  if (!S.logEnabled){
+    const p = document.createElement('p');
+    p.className = 'empty';
+    p.textContent = 'History is off.';
+    el.appendChild(p);
+    return;
+  }
+  if (!S.log.length){
+    const p = document.createElement('p');
+    p.className = 'empty';
+    p.textContent = 'No entries yet.';
+    el.appendChild(p);
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  S.log.slice().reverse().forEach(e => {
     const d = new Date(e.t);
-    const when = d.toLocaleDateString()+' · '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-    const cls = e.type === 'completed' ? '' : 'red';
-    const label = e.type === 'completed' ? 'Beat' : 'Urge';
-    return `<div class="log-item"><span class="when">${when}</span><span class="what ${cls}">${label}</span></div>`;
-  }).join('');
+    const row = document.createElement('div');
+    row.className = 'log-item';
+
+    const when = document.createElement('span');
+    when.className = 'when';
+    when.textContent = d.toLocaleDateString() + ' · ' +
+      d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+
+    const what = document.createElement('span');
+    const isDone = e.type === 'completed';
+    what.className = 'what' + (isDone ? '' : ' red');
+    what.textContent = isDone ? 'Beat' : 'Urge';
+
+    row.appendChild(when);
+    row.appendChild(what);
+    frag.appendChild(row);
+  });
+  el.appendChild(frag);
 }
+
 document.getElementById('logToggle').onchange = e => {
   S.logEnabled = e.target.checked;
   localStorage.setItem('rw-log-enabled', S.logEnabled);
   renderLog();
 };
-document.getElementById('clearLog').onclick = () => {
-  if (confirm('Clear history?')){ S.log = []; localStorage.removeItem('rw-log'); renderLog(); }
+
+document.getElementById('clearLog').onclick = async () => {
+  if (await confirmAction('Clear history?')){
+    S.log = [];
+    localStorage.removeItem('rw-log');
+    renderLog();
+    toast('History cleared');
+  }
 };
 
 /* ================= GRADE ================= */
@@ -541,16 +688,28 @@ function renderEnergy(){
   const cutoff = Date.now() - 30*24*3600*1000;
   rel.textContent = S.resets.filter(r => r >= cutoff).length;
 }
+
 setInterval(() => {
+  if (document.hidden) return;
   if (document.getElementById('screen-energy').classList.contains('active')) renderEnergy();
   if (document.getElementById('screen-home').classList.contains('active')) renderHomeTimer();
 }, 1000);
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden){
+    renderHomeTimer();
+    if (document.getElementById('screen-energy').classList.contains('active')) renderEnergy();
+  }
+});
 
 document.getElementById('startTimer').onclick = () => {
   const now = Date.now();
   if (S.timerStart){
     const streak = now - S.timerStart;
-    if (streak > S.bestStreak){ S.bestStreak = streak; localStorage.setItem('rw-best-streak', S.bestStreak); }
+    if (streak > S.bestStreak){
+      S.bestStreak = streak;
+      localStorage.setItem('rw-best-streak', String(S.bestStreak));
+    }
     S.resets.push(now);
     if (S.resets.length > 500) S.resets = S.resets.slice(-500);
     localStorage.setItem('rw-resets', JSON.stringify(S.resets));
@@ -559,7 +718,7 @@ document.getElementById('startTimer').onclick = () => {
   localStorage.setItem('rw-timer-start', String(now));
   renderEnergy();
   renderHomeTimer();
-  alert('Timer reset. It will now run forever until you reset it again.');
+  toast('Timer reset');
 };
 
 /* ================= KEGEL ================= */
@@ -570,47 +729,75 @@ const ROUTINES = {
 };
 let kegelState = null;
 
-document.querySelectorAll('.routine').forEach(r => r.onclick = () => startKegel(r.dataset.routine));
+document.querySelectorAll('.routine').forEach(r => r.onclick = () => {
+  const key = r.dataset.routine;
+  if (!ROUTINES[key]) return;
+  startKegel(key);
+});
 
 function startKegel(key){
   const cfg = ROUTINES[key];
-  kegelState = { cfg, round:1, rep:1, phase:'ready', cancelled:false };
+  kegelState = { cfg, round:1, rep:1, cancelled:false, _iv:null };
   document.getElementById('kegelLabel').textContent = cfg.name;
   show('screen-kegel');
   buildDots();
   setKegelPhase('Get Ready', 'Squeeze the muscles you\'d use to stop urination mid-flow. Keep abs, thighs, and glutes relaxed.', 3, () => runRep());
 }
+
 function buildDots(){
   const cfg = kegelState.cfg;
   const total = cfg.reps * cfg.rounds;
   const el = document.getElementById('kegelDots');
-  el.innerHTML = Array.from({length: total}, (_,i) => `<div class="dot" data-i="${i}"></div>`).join('');
+  el.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < total; i++){
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.dataset.i = String(i);
+    frag.appendChild(d);
+  }
+  el.appendChild(frag);
 }
+
 function markDot(idx, cls){
   const d = document.querySelector(`#kegelDots .dot[data-i="${idx}"]`);
   if (!d) return;
   d.classList.remove('current');
-  if (cls) d.classList.add(cls);
+  if (cls === 'done' || cls === 'current') d.classList.add(cls);
 }
+
 function setKegelPhase(phase, cue, seconds, done){
+  if (!kegelState || kegelState.cancelled) return;
+  if (kegelState._iv){ clearInterval(kegelState._iv); kegelState._iv = null; }
+
   document.getElementById('kegelPhase').textContent = phase;
   document.getElementById('kegelCue').textContent = cue;
   const el = document.getElementById('kegelTimer');
   let t = seconds;
   el.textContent = t;
-  const iv = setInterval(() => {
-    if (kegelState.cancelled){ clearInterval(iv); return; }
+
+  kegelState._iv = setInterval(() => {
+    if (!kegelState || kegelState.cancelled){
+      clearInterval(kegelState._iv);
+      kegelState._iv = null;
+      return;
+    }
     t--;
     el.textContent = t > 0 ? t : 0;
-    if (t <= 0){ clearInterval(iv); done && done(); }
+    if (t <= 0){
+      clearInterval(kegelState._iv);
+      kegelState._iv = null;
+      if (done && !kegelState.cancelled) done();
+    }
   }, 1000);
-  kegelState._iv = iv;
 }
+
 function runRep(){
-  if (kegelState.cancelled) return;
+  if (!kegelState || kegelState.cancelled) return;
   const { cfg, round, rep } = kegelState;
   const globalIdx = (round-1)*cfg.reps + (rep-1);
   markDot(globalIdx, 'current');
+
   setKegelPhase('Squeeze', 'Hold the contraction. Breathe normally.', cfg.hold, () => {
     markDot(globalIdx, 'done');
     setKegelPhase('Rest', 'Fully release. Let the muscle relax.', cfg.rest, () => {
@@ -619,19 +806,21 @@ function runRep(){
     });
   });
 }
+
 function runPulse(globalIdx, done){
   let p = 0;
   const cfg = kegelState.cfg;
   const pulseStep = () => {
-    if (kegelState.cancelled) return;
+    if (!kegelState || kegelState.cancelled) return;
     if (p >= cfg.pulse){ done(); return; }
     p++;
     setKegelPhase(`Pulse ${p}/${cfg.pulse}`, 'Quick squeeze and release. 1 second each.', 1, pulseStep);
   };
   pulseStep();
 }
+
 function advance(){
-  if (kegelState.cancelled) return;
+  if (!kegelState || kegelState.cancelled) return;
   const { cfg } = kegelState;
   if (kegelState.rep < cfg.reps){
     kegelState.rep++;
@@ -649,11 +838,29 @@ function advance(){
     localStorage.setItem('rw-kegel', JSON.stringify(S.kegelHistory));
   }
 }
-document.getElementById('kegelStart').onclick = () => { if (kegelState) runRep(); };
+
+document.getElementById('kegelStart').onclick = () => {
+  if (!kegelState || kegelState.cancelled) return;
+  if (kegelState._iv) return;
+  runRep();
+};
 document.getElementById('kegelStop').onclick = () => {
-  if (kegelState){ kegelState.cancelled = true; clearInterval(kegelState._iv); }
+  if (kegelState){
+    kegelState.cancelled = true;
+    if (kegelState._iv){ clearInterval(kegelState._iv); kegelState._iv = null; }
+  }
   show('screen-train');
 };
+
+function renderTrainingStats(){
+  document.getElementById('kegelCount').textContent = S.kegelHistory.length;
+  if (S.kegelHistory.length){
+    const last = new Date(S.kegelHistory[S.kegelHistory.length-1].t);
+    document.getElementById('kegelLast').textContent = last.toLocaleDateString();
+  } else {
+    document.getElementById('kegelLast').textContent = '—';
+  }
+}
 
 /* ================= SETTINGS: REMINDER ================= */
 function renderSettings(){
@@ -663,29 +870,34 @@ function renderSettings(){
 document.getElementById('reminderToggle').onchange = async (e) => {
   S.reminderOn = e.target.checked;
   localStorage.setItem('rw-reminder-on', S.reminderOn);
-  if (S.reminderOn && 'Notification' in window && Notification.permission !== 'granted'){
+  if (S.reminderOn && notificationsSupported && Notification.permission !== 'granted'){
     await Notification.requestPermission();
   }
 };
 document.getElementById('reminderTime').onchange = (e) => {
-  S.reminderTime = e.target.value;
-  localStorage.setItem('rw-reminder-time', S.reminderTime);
+  const v = e.target.value;
+  if (/^\d{2}:\d{2}$/.test(v)){
+    S.reminderTime = v;
+    localStorage.setItem('rw-reminder-time', v);
+  }
 };
 document.getElementById('testReminder').onclick = async () => {
-  if (!('Notification' in window)){ alert('This browser does not support notifications.'); return; }
+  if (!notificationsSupported){ toast('Not supported here'); return; }
   if (Notification.permission !== 'granted'){
     const p = await Notification.requestPermission();
-    if (p !== 'granted'){ alert('Permission denied.'); return; }
+    if (p !== 'granted'){ toast('Permission denied'); return; }
   }
   new Notification('Rewire', { body: 'Time to train. Pelvic floor awaits.', icon: 'icons/icon-192.png' });
+  toast('Test sent');
 };
 
-// Check every minute whether it's time for the reminder
 setInterval(() => {
   if (!S.reminderOn) return;
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  if (!notificationsSupported || Notification.permission !== 'granted') return;
   const now = new Date();
-  const today = now.toISOString().slice(0,10);
+  const today = now.getFullYear() + '-' +
+    String(now.getMonth()+1).padStart(2,'0') + '-' +
+    String(now.getDate()).padStart(2,'0');
   if (S.lastReminderDay === today) return;
   const hhmm = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
   if (hhmm === S.reminderTime){
@@ -698,7 +910,7 @@ setInterval(() => {
 /* ================= SETTINGS: BACKUP ================= */
 document.getElementById('exportBtn').onclick = () => {
   const data = {
-    version: 4,
+    version: 6,
     exported: new Date().toISOString(),
     theme: S.theme,
     logEnabled: S.logEnabled,
@@ -717,44 +929,87 @@ document.getElementById('exportBtn').onclick = () => {
   a.href = url;
   a.download = `rewire-backup-${stamp}.json`;
   a.click();
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast('Backup downloaded');
 };
 
 document.getElementById('importBtn').onclick = () => {
   document.getElementById('importFile').click();
 };
-document.getElementById('importFile').onchange = (e) => {
+
+document.getElementById('importFile').onchange = async (e) => {
   const file = e.target.files[0];
   if (!file) return;
+  if (file.size > 2 * 1024 * 1024){ toast('File too large'); e.target.value = ''; return; }
+
   const reader = new FileReader();
-  reader.onload = (ev) => {
+  reader.onload = async (ev) => {
     try {
       const data = JSON.parse(ev.target.result);
-      if (!data || typeof data !== 'object') throw new Error('Bad file');
-      if (!confirm('This will replace your current data with the backup. Continue?')) return;
+      if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Bad file');
 
-      if (data.theme) localStorage.setItem('rw-theme', data.theme);
-      if (typeof data.logEnabled === 'boolean') localStorage.setItem('rw-log-enabled', data.logEnabled);
-      if (Array.isArray(data.log)) localStorage.setItem('rw-log', JSON.stringify(data.log));
-      if (Array.isArray(data.resets)) localStorage.setItem('rw-resets', JSON.stringify(data.resets));
-      if (typeof data.timerStart === 'number') localStorage.setItem('rw-timer-start', String(data.timerStart));
-      if (typeof data.bestStreak === 'number') localStorage.setItem('rw-best-streak', String(data.bestStreak));
-      if (Array.isArray(data.kegelHistory)) localStorage.setItem('rw-kegel', JSON.stringify(data.kegelHistory));
-      if (typeof data.reminderOn === 'boolean') localStorage.setItem('rw-reminder-on', data.reminderOn);
-      if (data.reminderTime) localStorage.setItem('rw-reminder-time', data.reminderTime);
+      const ok = await confirmAction('This will replace your current data with the backup. Continue?');
+      if (!ok) return;
 
-      alert('Backup restored. Reloading…');
-      location.reload();
-    } catch (err) {
-      alert('Could not read that file. Make sure it is a Rewire backup.');
+      if (data.theme === 'dark' || data.theme === 'light') localStorage.setItem('rw-theme', data.theme);
+      if (typeof data.logEnabled === 'boolean') localStorage.setItem('rw-log-enabled', String(data.logEnabled));
+
+      if (Array.isArray(data.log)){
+        const clean = data.log.filter(e =>
+          e && typeof e === 'object' &&
+          typeof e.t === 'number' && isFinite(e.t) && e.t > 0 && e.t <= Date.now() &&
+          (e.type === 'started' || e.type === 'completed') &&
+          (e.path === null || e.path === undefined || REDIRECT_PATHS.includes(e.path))
+        ).map(e => ({
+          t: Math.floor(e.t),
+          type: e.type,
+          path: REDIRECT_PATHS.includes(e.path) ? e.path : null
+        })).slice(-400);
+        localStorage.setItem('rw-log', JSON.stringify(clean));
+      }
+      if (Array.isArray(data.resets)){
+        const clean = data.resets
+          .filter(n => typeof n === 'number' && isFinite(n) && n > 0 && n <= Date.now())
+          .map(n => Math.floor(n))
+          .slice(-500);
+        localStorage.setItem('rw-resets', JSON.stringify(clean));
+      }
+      if (Array.isArray(data.kegelHistory)){
+        const clean = data.kegelHistory.filter(e =>
+          e && typeof e === 'object' &&
+          typeof e.t === 'number' && isFinite(e.t) && e.t > 0 && e.t <= Date.now()
+        ).map(e => ({
+          t: Math.floor(e.t),
+          routine: typeof e.routine === 'string' ? e.routine.slice(0, 40) : 'Training'
+        })).slice(-200);
+        localStorage.setItem('rw-kegel', JSON.stringify(clean));
+      }
+      if (typeof data.timerStart === 'number' && isFinite(data.timerStart) && data.timerStart >= 0 && data.timerStart <= Date.now()){
+        localStorage.setItem('rw-timer-start', String(Math.floor(data.timerStart)));
+      }
+      if (typeof data.bestStreak === 'number' && isFinite(data.bestStreak) && data.bestStreak >= 0 && data.bestStreak <= 100 * 365 * 24 * 3600 * 1000){
+        localStorage.setItem('rw-best-streak', String(Math.floor(data.bestStreak)));
+      }
+      if (typeof data.reminderOn === 'boolean') localStorage.setItem('rw-reminder-on', String(data.reminderOn));
+      if (typeof data.reminderTime === 'string' && /^\d{2}:\d{2}$/.test(data.reminderTime)){
+        localStorage.setItem('rw-reminder-time', data.reminderTime);
+      }
+
+      toast('Backup restored');
+      setTimeout(() => location.reload(), 800);
+    } catch {
+      toast('Could not read that file');
     }
   };
   reader.readAsText(file);
+  e.target.value = '';
 };
 
 /* ================= INIT ================= */
 renderHomeTimer();
 renderSettings();
+renderTrainingStats();
+
 if ('serviceWorker' in navigator){
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
 }
